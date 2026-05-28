@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AQUA Technology – معالجة المياه والصرف الصناعي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --blue-deep: #003f6b;
+      --blue-mid: #0077b6;
+      --blue-bright: #00b4d8;
+      --cyan: #48cae4;
+      --aqua: #00f5d4;
+      --white: #f0f8ff;
+      --dark: #010d18;
+      --card-bg: rgba(0, 63, 107, 0.35);
+      --glass: rgba(0, 180, 216, 0.08);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--dark);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ─── ANIMATED WATER BACKGROUND ─── */
+    .water-bg {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background: radial-gradient(ellipse at 20% 50%, #001f3f 0%, transparent 60%),
+                  radial-gradient(ellipse at 80% 20%, #003f6b 0%, transparent 55%),
+                  radial-gradient(ellipse at 60% 80%, #00234a 0%, transparent 50%),
+                  linear-gradient(180deg, #010d18 0%, #001629 50%, #010d18 100%);
+    }
+    .water-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300b4d8' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      opacity: 0.4;
+    }
+
+    /* ─── BUBBLES ─── */
+    .bubbles { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .bubble {
+      position: absolute; bottom: -60px; border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(0,245,212,0.3), rgba(0,180,216,0.05));
+      border: 1px solid rgba(0,245,212,0.15);
+      animation: rise linear infinite;
+    }
+    @keyframes rise {
+      0%   { transform: translateY(0) scale(1); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 0.5; }
+      100% { transform: translateY(-110vh) scale(1.4); opacity: 0; }
+    }
+    .bubble:nth-child(1)  { width:12px; height:12px; left:10%; animation-duration:8s;  animation-delay:0s; }
+    .bubble:nth-child(2)  { width:20px; height:20px; left:25%; animation-duration:11s; animation-delay:2s; }
+    .bubble:nth-child(3)  { width:8px;  height:8px;  left:40%; animation-duration:7s;  animation-delay:1s; }
+    .bubble:nth-child(4)  { width:16px; height:16px; left:55%; animation-duration:13s; animation-delay:4s; }
+    .bubble:nth-child(5)  { width:24px; height:24px; left:70%; animation-duration:10s; animation-delay:0.5s; }
+    .bubble:nth-child(6)  { width:10px; height:10px; left:85%; animation-duration:9s;  animation-delay:3s; }
+    .bubble:nth-child(7)  { width:18px; height:18px; left:15%; animation-duration:12s; animation-delay:5s; }
+    .bubble:nth-child(8)  { width:6px;  height:6px;  left:60%; animation-duration:6s;  animation-delay:2.5s; }
+    .bubble:nth-child(9)  { width:14px; height:14px; left:45%; animation-duration:14s; animation-delay:1.5s; }
+    .bubble:nth-child(10) { width:22px; height:22px; left:90%; animation-duration:11s; animation-delay:3.5s; }
+
+    /* ─── NAVBAR ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      padding: 18px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(1, 13, 24, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0,180,216,0.2);
+    }
+    .logo {
+      display: flex; align-items: center; gap: 14px;
+      text-decoration: none;
+    }
+    .logo-icon {
+      width: 46px; height: 46px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--blue-mid), var(--aqua));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; box-shadow: 0 0 20px rgba(0,245,212,0.4);
+    }
+    .logo-text { display: flex; flex-direction: column; line-height: 1.1; }
+    .logo-text .brand { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 3px; color: var(--cyan); }
+    .logo-text .sub { font-size: 10px; color: rgba(240,248,255,0.5); letter-spacing: 2px; text-transform: uppercase; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      color: rgba(240,248,255,0.75); text-decoration: none; font-size: 14px; font-weight: 600;
+      letter-spacing: 0.5px; transition: color 0.3s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; right: 0; left: 0; height: 2px;
+      background: var(--aqua); border-radius: 2px;
+      transform: scaleX(0); transition: transform 0.3s;
+    }
+    .nav-links a:hover { color: var(--aqua); }
+    .nav-links a:hover::after { transform: scaleX(1); }
+    .nav-phone {
+      display: flex; align-items: center; gap: 10px;
+      background: linear-gradient(135deg, var(--blue-mid), var(--blue-bright));
+      padding: 10px 20px; border-radius: 30px;
+      color: white; text-decoration: none; font-weight: 700; font-size: 14px;
+      box-shadow: 0 4px 20px rgba(0,119,182,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .nav-phone:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,180,216,0.5); }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative; z-index: 1; min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 120px 40px 80px;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(0,245,212,0.1); border: 1px solid rgba(0,245,212,0.3);
+      padding: 8px 20px; border-radius: 30px; font-size: 13px; color: var(--aqua);
+      margin-bottom: 28px; letter-spacing: 1px;
+      animation: fadeDown 0.8s ease both;
+    }
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(56px, 10vw, 120px);
+      letter-spacing: 6px;
+      line-height: 0.9;
+      background: linear-gradient(135deg, #ffffff 0%, var(--cyan) 40%, var(--aqua) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      animation: fadeDown 0.8s 0.2s ease both;
+      margin-bottom: 12px;
+    }
+    .hero h2 {
+      font-size: clamp(18px, 3vw, 28px); font-weight: 400;
+      color: rgba(240,248,255,0.7);
+      animation: fadeDown 0.8s 0.35s ease both;
+      margin-bottom: 30px;
+    }
+    .hero p {
+      max-width: 640px; font-size: 17px; line-height: 1.9;
+      color: rgba(240,248,255,0.6);
+      animation: fadeDown 0.8s 0.5s ease both;
+      margin-bottom: 48px;
+    }
+    .hero-cta {
+      display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+      animation: fadeDown 0.8s 0.65s ease both;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue-mid), var(--aqua));
+      color: var(--dark); padding: 16px 36px; border-radius: 50px;
+      text-decoration: none; font-weight: 900; font-size: 16px;
+      box-shadow: 0 8px 30px rgba(0,245,212,0.35);
+      transition: transform 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.5px;
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(0,245,212,0.5); }
+    .btn-secondary {
+      border: 2px solid rgba(0,180,216,0.5); color: var(--cyan);
+      padding: 14px 34px; border-radius: 50px;
+      text-decoration: none; font-weight: 700; font-size: 16px;
+      transition: all 0.3s;
+    }
+    .btn-secondary:hover { background: rgba(0,180,216,0.15); border-color: var(--cyan); }
+
+    /* ─── STATS ─── */
+    .stats {
+      position: relative; z-index: 1;
+      display: flex; justify-content: center; flex-wrap: wrap; gap: 0;
+      background: rgba(0,63,107,0.3); backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(0,180,216,0.2);
+      border-bottom: 1px solid rgba(0,180,216,0.2);
+    }
+    .stat {
+      flex: 1; min-width: 160px;
+      padding: 36px 24px; text-align: center;
+      border-left: 1px solid rgba(0,180,216,0.15);
+    }
+    .stat:last-child { border-left: none; }
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif; font-size: 52px;
+      background: linear-gradient(135deg, var(--cyan), var(--aqua));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      line-height: 1;
+    }
+    .stat-label { font-size: 13px; color: rgba(240,248,255,0.55); margin-top: 6px; letter-spacing: 0.5px; }
+
+    /* ─── SECTIONS ─── */
+    section { position: relative; z-index: 1; padding: 90px 40px; max-width: 1300px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 60px; }
+    .section-tag {
+      display: inline-block; background: rgba(0,245,212,0.1); border: 1px solid rgba(0,245,212,0.3);
+      color: var(--aqua); font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+      padding: 6px 18px; border-radius: 20px; margin-bottom: 16px;
+    }
+    .section-header h3 {
+      font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 5vw, 60px);
+      letter-spacing: 3px;
+      background: linear-gradient(135deg, white, var(--cyan));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .section-header p { color: rgba(240,248,255,0.55); font-size: 16px; margin-top: 12px; max-width: 580px; margin-left: auto; margin-right: auto; }
+
+    /* ─── SERVICES ─── */
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .service-card {
+      background: var(--card-bg); backdrop-filter: blur(12px);
+      border: 1px solid rgba(0,180,216,0.2); border-radius: 20px; padding: 36px 28px;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      position: relative; overflow: hidden;
+    }
+    .service-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(0,180,216,0.05), transparent);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .service-card:hover { transform: translateY(-6px); border-color: rgba(0,245,212,0.4); box-shadow: 0 20px 50px rgba(0,119,182,0.2); }
+    .service-card:hover::before { opacity: 1; }
+    .service-icon {
+      width: 60px; height: 60px; border-radius: 16px;
+      background: linear-gradient(135deg, var(--blue-mid), var(--blue-bright));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; margin-bottom: 20px;
+      box-shadow: 0 8px 20px rgba(0,119,182,0.3);
+    }
+    .service-card h4 { font-size: 18px; font-weight: 700; color: var(--white); margin-bottom: 10px; }
+    .service-card p { font-size: 14px; color: rgba(240,248,255,0.55); line-height: 1.8; }
+
+    /* ─── PRODUCTS ─── */
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+    .product-card {
+      background: var(--glass); backdrop-filter: blur(10px);
+      border: 1px solid rgba(0,180,216,0.15); border-radius: 16px; padding: 28px 22px;
+      transition: all 0.3s; cursor: pointer; position: relative;
+    }
+    .product-card:hover { border-color: var(--aqua); background: rgba(0,245,212,0.07); transform: scale(1.02); }
+    .product-tag {
+      font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--aqua); background: rgba(0,245,212,0.1); padding: 3px 10px;
+      border-radius: 10px; display: inline-block; margin-bottom: 14px;
+    }
+    .product-card h5 { font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
+    .product-card p { font-size: 12px; color: rgba(240,248,255,0.5); line-height: 1.7; }
+    .product-arrow {
+      position: absolute; top: 18px; left: 18px;
+      width: 28px; height: 28px; border-radius: 8px;
+      background: rgba(0,180,216,0.15); display: flex; align-items: center; justify-content: center;
+      font-size: 13px; opacity: 0; transition: opacity 0.3s;
+    }
+    .product-card:hover .product-arrow { opacity: 1; }
+
+    /* ─── WHY US ─── */
+    .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+    .why-card {
+      background: var(--glass); border: 1px solid rgba(0,180,216,0.1); border-radius: 16px;
+      padding: 30px 24px; text-align: center;
+    }
+    .why-icon { font-size: 40px; margin-bottom: 16px; display: block; }
+    .why-card h5 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .why-card p { font-size: 13px; color: rgba(240,248,255,0.5); line-height: 1.7; }
+
+    /* ─── PROCESS ─── */
+    .process-steps { display: flex; flex-direction: column; gap: 0; max-width: 750px; margin: 0 auto; }
+    .process-step {
+      display: flex; gap: 24px; align-items: flex-start;
+      padding: 28px 0; border-bottom: 1px solid rgba(0,180,216,0.1);
+    }
+    .process-step:last-child { border-bottom: none; }
+    .step-num {
+      min-width: 50px; height: 50px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue-mid), var(--aqua));
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--dark);
+      flex-shrink: 0; box-shadow: 0 0 20px rgba(0,245,212,0.3);
+    }
+    .step-content h5 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .step-content p { font-size: 14px; color: rgba(240,248,255,0.55); line-height: 1.7; }
+
+    /* ─── CONTACT ─── */
+    #contact {
+      background: rgba(0,63,107,0.2); backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(0,180,216,0.2);
+      border-bottom: 1px solid rgba(0,180,216,0.2);
+      text-align: center; padding: 90px 40px;
+    }
+    #contact h3 {
+      font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 5vw, 60px);
+      letter-spacing: 3px; margin-bottom: 16px;
+      background: linear-gradient(135deg, white, var(--aqua));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    #contact p { color: rgba(240,248,255,0.55); font-size: 16px; max-width: 500px; margin: 0 auto 40px; line-height: 1.8; }
+    .contact-cards { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+    .contact-card {
+      background: var(--card-bg); border: 1px solid rgba(0,180,216,0.25);
+      border-radius: 20px; padding: 32px 36px; display: flex; flex-direction: column; align-items: center; gap: 12px;
+      min-width: 220px; transition: all 0.3s;
+    }
+    .contact-card:hover { border-color: var(--aqua); transform: translateY(-4px); }
+    .contact-card .icon { font-size: 32px; }
+    .contact-card .label { font-size: 12px; color: rgba(240,248,255,0.45); letter-spacing: 1px; }
+    .contact-card .value { font-size: 20px; font-weight: 700; color: var(--aqua); letter-spacing: 1px; }
+    .contact-card a { color: var(--aqua); text-decoration: none; font-size: 20px; font-weight: 700; }
+    .whatsapp-btn {
+      display: inline-flex; align-items: center; gap: 12px; margin-top: 40px;
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      color: white; padding: 16px 40px; border-radius: 50px; text-decoration: none;
+      font-weight: 900; font-size: 17px;
+      box-shadow: 0 8px 30px rgba(37,211,102,0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .whatsapp-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(37,211,102,0.45); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      position: relative; z-index: 1;
+      background: rgba(1, 10, 20, 0.95); border-top: 1px solid rgba(0,180,216,0.15);
+      padding: 50px 40px 30px; text-align: center;
+    }
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 5px;
+      background: linear-gradient(135deg, var(--cyan), var(--aqua));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+    footer p { color: rgba(240,248,255,0.35); font-size: 13px; }
+    .footer-links { display: flex; justify-content: center; gap: 28px; list-style: none; margin: 20px 0; flex-wrap: wrap; }
+    .footer-links a { color: rgba(240,248,255,0.45); text-decoration: none; font-size: 13px; transition: color 0.3s; }
+    .footer-links a:hover { color: var(--aqua); }
+    .footer-divider { border: none; border-top: 1px solid rgba(0,180,216,0.1); margin: 24px 0; }
+    .footer-bottom { font-size: 12px; color: rgba(240,248,255,0.25); }
+
+    /* ─── SECTION BG DIVIDERS ─── */
+    .wave-divider { position: relative; z-index: 1; overflow: hidden; line-height: 0; }
+    .wave-divider svg { display: block; width: 100%; }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      nav { padding: 14px 20px; }
+      .nav-links { display: none; }
+      section { padding: 70px 20px; }
+      .stat { min-width: 120px; padding: 24px 14px; }
+      .stat-num { font-size: 38px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- BACKGROUNDS -->
+<div class="water-bg"></div>
+<div class="bubbles">
+  <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+  <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+  <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+  <div class="bubble"></div>
+</div>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="#" class="logo">
+    <div class="logo-icon">💧</div>
+    <div class="logo-text">
+      <span class="brand">AQUA</span>
+      <span class="sub">Technology</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#services">خدماتنا</a></li>
+    <li><a href="#products">المنتجات</a></li>
+    <li><a href="#process">آلية العمل</a></li>
+    <li><a href="#contact">تواصل معنا</a></li>
+  </ul>
+  <a href="tel:+201014104299" class="nav-phone">📞 +20 101 410 4299</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">🌊 الشريك الموثوق لمعالجة المياه في مصر</div>
+  <h1>AQUA<br>TECHNOLOGY</h1>
+  <h2>حلول متكاملة لمعالجة المياه والصرف الصناعي</h2>
+  <p>نقدم أحدث تقنيات معالجة المياه وإعادة تدويرها وتنقية الصرف الصناعي — حلول هندسية متكاملة تلبي أعلى المعايير الدولية لجميع القطاعات الصناعية والتجارية.</p>
+  <div class="hero-cta">
+    <a href="#contact" class="btn-primary">اتصل بنا الآن</a>
+    <a href="#products" class="btn-secondary">تصفح المنتجات</a>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="stat-num">500+</div><div class="stat-label">مشروع منجز</div></div>
+  <div class="stat"><div class="stat-num">15+</div><div class="stat-label">سنة خبرة</div></div>
+  <div class="stat"><div class="stat-num">200+</div><div class="stat-label">عميل راضٍ</div></div>
+  <div class="stat"><div class="stat-num">50+</div><div class="stat-label">منتج متخصص</div></div>
+  <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">دعم فني</div></div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-header">
+    <div class="section-tag">خدماتنا</div>
+    <h3>ماذا نقدم لك؟</h3>
+    <p>نوفر حلولاً هندسية شاملة في مجال معالجة المياه بأعلى جودة وأحدث التقنيات</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">🏭</div>
+      <h4>معالجة الصرف الصناعي</h4>
+      <p>أنظمة متكاملة لمعالجة مياه الصرف الصناعي من المصانع والمنشآت الكبرى وفق أعلى المعايير البيئية.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">💧</div>
+      <h4>تنقية وتحلية المياه</h4>
+      <p>تقنيات التناضح العكسي والتصفية الدقيقة لتوفير مياه نقية صالحة للشرب والاستخدام الصناعي.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🔄</div>
+      <h4>إعادة استخدام المياه</h4>
+      <p>حلول مبتكرة لإعادة تدوير المياه المعالجة وإعادة توظيفها في العمليات الصناعية توفيراً للتكاليف.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🧪</div>
+      <h4>معالجة المياه الكيميائية</h4>
+      <p>برامج معالجة كيميائية متكاملة للتحكم في الترسبات والتآكل والنمو البيولوجي في شبكات المياه.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🛠️</div>
+      <h4>الصيانة والدعم الفني</h4>
+      <p>فريق متخصص لصيانة وتشغيل محطات معالجة المياه على مدار الساعة طوال أيام الأسبوع.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📊</div>
+      <h4>الاستشارات الهندسية</h4>
+      <p>استشارات هندسية متخصصة لتصميم محطات المعالجة وتحديد أنسب الحلول التقنية لكل مشروع.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products" style="max-width:100%; background: rgba(0,63,107,0.15); padding: 90px 40px;">
+  <div style="max-width:1300px; margin:0 auto;">
+    <div class="section-header">
+      <div class="section-tag">المنتجات</div>
+      <h3>كتالوج المنتجات</h3>
+      <p>أكثر من 50 منتجاً متخصصاً في مجال معالجة المياه والصرف الصناعي</p>
+    </div>
+    <div class="products-grid">
+
+      <div class="product-card">
+        <div class="product-tag">تنقية</div>
+        <div class="product-arrow">↗</div>
+        <h5>أنظمة التناضح العكسي (RO)</h5>
+        <p>وحدات تناضح عكسي بسعات مختلفة من 500 لتر/ساعة حتى 500 م³/يوم</p>
+      </div>
+
+      <div class="product-card">
+        <div class="product-tag">تصفية</div>
+        <div class="product-arrow">↗</div>
+        <h5>فلاتر الرمل والأنثراسيت</h5>
+        <p>مرشحات ثنائية ومتعددة الطبقات لإزالة العكارة والمواد العالقة</p>
+      </div>
+
+      <div class="product-card">
+        <div class="product-tag">تعقيم</div>
+        <div class="product-arrow">↗</div>
+        <h5>أنظمة الأشعة فوق البنفسجية UV</h5>
+        <p>تعقيم مياه فعّال بدون كيماويات بتقنية UV الحديثة</p>
+      </div>
+
+      <div class="product-card">
+        <div class="product-tag">ضخ</div>
+        <div class="product-arrow">↗</div>
+        <h5>طلمبات الجرعات الكيميائية</h5>
+        <p>مضخات دوزينج دقيقة لإضافة مواد الكلور وأحماض ومضادات الترسب</p>
+      </div>
+
+      <div class="product-card">
+        <div class="product-tag">خزن</div>
+        <div class="product-arrow">↗</div>
+        <h5>خزانات GRP الزجاجية</h5>
+        <p>خزانات فيبر زجاجي مقاومة للكيماويات بأحجام من 1 م³ حتى 200 م³</p>
+      </div>
+
+      <div class="product-card">
+        <div class="product-tag">رصد</div>
+        <div class="product-arrow">↗</div>
+        <h5>أجهزة قياس جودة المياه</h5>
+        <p>مقاييس pH وTDS والكلور وORP والعكارة والأكسجين الذائب</p>
+      </div>
+
+      <div class="product-card">
+        <div class="product-tag">صرف</div>
+        <div class="product-arrow">↗</div>
+        <h5>محطات معالجة الصرف الصحي STP</h5>
+        <p>وحدات مدمجة لمعالجة الصرف الصحي للمجمعات السكنية والفنادق</p>
+      </div>
+
+      <div class="product-card">
+        <div class="product-tag">ترشيح</div>
+        <div class="product-arrow">↗</div>
+        <h5>فلاتر الكربون النشط</h5>
+        <p>إزالة الكلور والمبيدات والمواد العضوية وتحسين طعم ورائحة المياه</p>
+      </div>
+
+      <div class="product-card">
+        <div class="product-tag">معالجة</div>
+        <div class="product-arrow">↗</div>
+        <h5>أحواض الترسيب والتخثر</h5>
+        <p>وحدات الكواغل والمخثرات الكيميائية لمعالجة المياه الملوثة</p>
+      </div>
+
+      <div class="product-card">
+        <div class="product-tag">تبريد</div>
+        <div class="product-arrow">↗</div>
+        <h5>برامج معالجة أبراج التبريد</h5>
+        <p>كيماويات ومعدات لحماية دوائر التبريد من الترسب والتآكل والبكتيريا</p>
+      </div>
+
+      <div class="product-card">
+        <div class="product-tag">تحلية</div>
+        <div class="product-arrow">↗</div>
+        <h5>وحدات تحلية مياه البحر</h5>
+        <p>أنظمة SWRO متكاملة لتحلية مياه البحر بكفاءة طاقة عالية</p>
+      </div>
+
+      <div class="product-card">
+        <div class="product-tag">طرد</div>
+        <div class="product-arrow">↗</div>
+        <h5>ماكينات الطرد المركزي للحمأة</h5>
+        <p>معدات تجفيف الحمأة الناتجة عن محطات المعالجة لتسهيل التخلص منها</p>
+      </div>
+
+      <div class="product-card">
+        <div class="product-tag">تطهير</div>
+        <div class="product-arrow">↗</div>
+        <h5>أنظمة توليد الأوزون</h5>
+        <p>مولدات أوزون للتطهير المتقدم وإزالة الملوثات العضوية والألوان</p>
+      </div>
+
+      <div class="product-card">
+        <div class="product-tag">ملح</div>
+        <div class="product-arrow">↗</div>
+        <h5>أنظمة تليين المياه</h5>
+        <p>وحدات إزالة العسر برزين الكاتيون لحماية المعدات من الترسبات الكلسية</p>
+      </div>
+
+      <div class="product-card">
+        <div class="product-tag">حماية</div>
+        <div class="product-arrow">↗</div>
+        <h5>مواد كيميائية معالجة المياه</h5>
+        <p>كواغل ومخثرات ومضادات الترسب والتآكل وبيوسايدات مرخصة</p>
+      </div>
+
+      <div class="product-card">
+        <div class="product-tag">تحكم</div>
+        <div class="product-arrow">↗</div>
+        <h5>لوحات التحكم SCADA</h5>
+        <p>أنظمة مراقبة وتحكم ذكية لمتابعة عمليات المعالجة عن بُعد</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="why">
+  <div class="section-header">
+    <div class="section-tag">لماذا AQUA</div>
+    <h3>ميزتنا التنافسية</h3>
+    <p>نجمع بين الخبرة العملية وأحدث التقنيات لتقديم أفضل الحلول</p>
+  </div>
+  <div class="why-grid">
+    <div class="why-card">
+      <span class="why-icon">🏆</span>
+      <h5>خبرة 15+ سنة</h5>
+      <p>سنوات من الخبرة في تنفيذ مشاريع معالجة المياه على مستوى الجمهورية</p>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">🔬</span>
+      <h5>تقنيات حديثة</h5>
+      <p>نستخدم أحدث التقنيات والمعدات من أفضل الماركات العالمية</p>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">✅</span>
+      <h5>جودة معتمدة</h5>
+      <p>جميع منتجاتنا وحلولنا معتمدة ومطابقة للمعايير الدولية ISO</p>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">🚀</span>
+      <h5>تنفيذ سريع</h5>
+      <p>فريق متخصص يضمن تنفيذ المشاريع في الوقت المحدد وبأعلى جودة</p>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">💰</span>
+      <h5>أسعار تنافسية</h5>
+      <p>نوفر أفضل الحلول بأسعار منافسة مع ضمان أعلى مستوى جودة</p>
+    </div>
+    <div class="why-card">
+      <span class="why-icon">🤝</span>
+      <h5>دعم مستمر</h5>
+      <p>نلتزم بتقديم الدعم الفني والصيانة الكاملة لجميع مشاريعنا</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process" style="max-width:100%; background: rgba(0,63,107,0.1); padding: 90px 40px;">
+  <div style="max-width:1300px; margin:0 auto;">
+    <div class="section-header">
+      <div class="section-tag">آلية العمل</div>
+      <h3>كيف نعمل؟</h3>
+      <p>منهجية عمل واضحة من أول لقاء حتى تسليم المشروع والمتابعة</p>
+    </div>
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h5>تحليل الاحتياجات</h5>
+          <p>نبدأ بتحليل شامل لاحتياجاتك ومتطلبات مشروعك وإجراء الفحوصات المختبرية اللازمة لعينات المياه.</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h5>التصميم الهندسي</h5>
+          <p>يقوم فريقنا الهندسي بتصميم الحل المثالي المناسب لمشروعك وفق أحدث المعايير الهندسية.</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h5>تقديم العرض</h5>
+          <p>نقدم عرض سعر شاملاً ومفصلاً يوضح جميع المكونات والتكاليف وجداول الأعمال.</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h5>التوريد والتركيب</h5>
+          <p>نتولى توريد جميع المعدات وتركيبها واختبارها بأيدي فريق متخصص ومحترف.</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h5>التشغيل والتدريب</h5>
+          <p>نقوم بتشغيل المنظومة وتدريب الكوادر الخاصة بك على طريقة التشغيل والصيانة الدورية.</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <h5>المتابعة والضمان</h5>
+          <p>نوفر ضمان شامل على جميع الأعمال مع برنامج متابعة دوري لضمان أفضل أداء مستمر.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <h3>تواصل معنا</h3>
+  <p>نحن هنا لمساعدتك في تحقيق أفضل حلول معالجة المياه لمشروعك. تواصل معنا الآن!</p>
+  <div class="contact-cards">
+    <div class="contact-card">
+      <div class="icon">📞</div>
+      <div class="label">رقم الهاتف</div>
+      <a href="tel:+201014104299" class="value">+20 101 410 4299</a>
+    </div>
+    <div class="contact-card">
+      <div class="icon">💬</div>
+      <div class="label">واتساب</div>
+      <div class="value">201014104299+</div>
+    </div>
+    <div class="contact-card">
+      <div class="icon">🌍</div>
+      <div class="label">مجال العمل</div>
+      <div class="value" style="font-size:14px;">جمهورية مصر العربية</div>
+    </div>
+  </div>
+  <a href="https://wa.me/201014104299" target="_blank" class="whatsapp-btn">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    تواصل عبر واتساب الآن
+  </a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">AQUA TECHNOLOGY</div>
+  <p>متخصصون في معالجة المياه ومعالجة الصرف الصناعي</p>
+  <ul class="footer-links">
+    <li><a href="#services">خدماتنا</a></li>
+    <li><a href="#products">المنتجات</a></li>
+    <li><a href="#process">آلية العمل</a></li>
+    <li><a href="#contact">اتصل بنا</a></li>
+  </ul>
+  <hr class="footer-divider"/>
+  <p class="footer-bottom">© 2025 AQUA Technology — جميع الحقوق محفوظة | 📞 +20 101 410 4299</p>
+</footer>
+
+</body>
+</html>
